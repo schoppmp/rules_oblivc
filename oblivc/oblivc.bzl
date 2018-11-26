@@ -1,7 +1,7 @@
 def _oblivc_library_impl(ctx):
   inputs = ctx.files.srcs + ctx.files.hdrs
   input_paths = [f.path for f in inputs]
-  args = ["-c"] + input_paths + ["-o", ctx.outputs.obj.path] + ctx.fragments.cpp.copts
+  args = ["-Wno-format-security", "-Wno-deprecated-declarations", "--keepunused", "--doprocessObliv", "--markImplicitCasts", "--include obliv_bits.h", "-pthread", "-c"] + input_paths + ["-o", ctx.outputs.obj.path] + ctx.fragments.cpp.copts
   ctx.actions.run(
     inputs = inputs,
     outputs = [ ctx.outputs.obj ],

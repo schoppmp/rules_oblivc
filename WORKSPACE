@@ -9,37 +9,9 @@ load(
 
 load("//oblivc:oblivc.bzl", "oblivc_library")
 
-new_git_repository(
+local_repository(
     name = "io_oblivc",
-    remote = "https://github.com/samee/obliv-c.git",
-    commit = "3d6804ca0fd85868207a0ccbd2509ec064723ac2",
-    build_file_content = """
-load("@io_rules_oblivc//oblivc:compile.bzl", "compile_oblivc")
-
-filegroup(
-  name = "srcs",
-  srcs = glob(["**/*"]),
-)
-
-compile_oblivc(
-  name = "oblivc_tree",
-)
-
-sh_binary(
-  name = "oblivcc",
-  srcs = ["bin/oblivcc"],
-  data = ["oblivc_tree"],
-  visibility = ["//visibility:public"],
-)
-
-cc_library(
-  name = "runtime",
-  srcs = glob(["src/ext/oblivc/*.c"]),
-  hdrs = glob(["src/ext/oblivc/*.h"]),
-  copts = ["-Isrc/ext/oblivc -Wno-unused-variable"],
-  visibility = ["//visibility:public"],
-)
-""",
+    path = "/home/schoppmp/obliv-c"
 )
 
 git_repository(
