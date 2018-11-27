@@ -12,6 +12,6 @@ load("//oblivc:oblivc.bzl", "oblivc_library")
 new_git_repository(
     name = "io_oblivc",
     remote = "https://github.com/schoppmp/obliv-c",
-    commit = "66d0cee9c4dfb1952a7a9486d541669f869e6c9a",
+    commit = "b55a96e5aebb557e07668e30a79d6818b1663f5c",
     build_file = "BUILD.oblivc",
 )

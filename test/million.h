@@ -1,6 +1,6 @@
-typedef struct protocolIO
-{ int cmp; // -1,0, or 1
+typedef struct protocolIO {
+  int cmp; // -1,0, or 1
   int mywealth;
 } protocolIO;
 
-void millionaire(void* args);
+void millionaire(void *args);

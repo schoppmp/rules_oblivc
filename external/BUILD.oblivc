@@ -1,3 +1,4 @@
+load("@io_rules_oblivc//oblivc:oblivc.bzl", "oblivc_library")
 
 filegroup(
   name = "sources",
@@ -17,15 +18,51 @@ filegroup(
   srcs = glob([
     "src/ext/oblivc/*.oh",
   ]),
-  visibility = ["//visibility:public"],
 )
 
 filegroup(
   name = "runtime_sources",
   srcs = glob([
     "src/ext/oblivc/*.c",
+  ]),
+)
+
+filegroup(
+  name = "runtime_obliv_sources",
+  srcs = glob([
     "src/ext/oblivc/*.oc",
   ]),
+)
+
+oblivc_library(
+  name = "runtime_obliv",
+  srcs = [
+    ":runtime_obliv_sources",
+  ],
+  hdrs = [
+    ":runtime_headers",
+    ":runtime_obliv_headers",
+  ],
+)
+
+cc_library(
+  name = "runtime",
+  srcs = [
+    ":runtime_sources",
+  ],
+  hdrs = [
+    ":runtime_headers",
+  ],
+  data = [ "src/ext/oblivc" ],
+  deps = [ "runtime_obliv" ],
+  copts = [
+    "-Wno-unused-variable",
+    "-I$(rootpath src/ext/oblivc)",
+  ],
+  linkopts = [
+    "-lgcrypt",
+    "-lpthread",
+  ],
   visibility = ["//visibility:public"],
 )
 
@@ -373,13 +410,14 @@ genrule(
   # Build Obliv-C locally. We have to make a deep-copy of the sources, because
   # relative paths do not work across symlinks.
   cmd = "\n".join([
-        "DIR=$$(mktemp -d $${TMPDIR-/tmp}/tmp.XXXXXXX)",
+        "DIR=$$(mktemp -d $${TMPDIR-/tmp}/bazel-oblivc.XXXXXXX)",
         "echo $${DIR}",
         "cp -Lfr $$(dirname $(rootpath configure))/* \"$${DIR}\"",
         "(cd \"$${DIR}\" && ./configure && make)",
-        "cp -r $${DIR}/share $(@D)",
+        "echo \"$(@D)/lib\" > $(@D)/share/cil/ocamlpath",
         "cp -r $${DIR}/bin $(@D)",
         "cp -r $${DIR}/lib $(@D) || true",
+        "rm -rf \"$${DIR}\""
         ]),
   visibility = ["//visibility:public"],
 )
