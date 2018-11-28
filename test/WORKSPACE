@@ -1,0 +1,7 @@
+workspace(name = "test")
+
+local_repository(name = "io_rules_oblivc", path = "..")
+
+load("@io_rules_oblivc//oblivc:deps.bzl", "oblivc_deps")
+
+oblivc_deps()

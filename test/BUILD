@@ -1,4 +1,4 @@
-load("//oblivc:oblivc.bzl", "oblivc_library")
+load("@io_rules_oblivc//oblivc:oblivc.bzl", "oblivc_library")
 
 oblivc_library(
   name = "million_oblivc",
@@ -11,6 +11,5 @@ cc_binary(
   srcs = [ "million.c" ],
   deps = [
     "million_oblivc",
-    "//oblivc",
   ],
 )

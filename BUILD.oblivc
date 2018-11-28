@@ -43,6 +43,7 @@ oblivc_library(
     ":runtime_headers",
     ":runtime_obliv_headers",
   ],
+  runtime = False,
 )
 
 cc_library(
@@ -63,6 +64,7 @@ cc_library(
     "-lgcrypt",
     "-lpthread",
   ],
+  strip_include_prefix = "src/ext/oblivc",
   visibility = ["//visibility:public"],
 )
 

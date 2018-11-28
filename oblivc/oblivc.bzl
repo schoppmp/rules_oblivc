@@ -51,16 +51,20 @@ oblivc_object = rule(
     fragments = [ "cpp" ],
   )
 
-def oblivc_library(name, srcs = [], hdrs = [], deps = []):
+def oblivc_library(name, srcs = [], hdrs = [], deps = [], runtime = True):
   oblivc_object(
     name = name + "_obliv",
     srcs = srcs,
     hdrs = hdrs,
     deps = deps
   )
+  if runtime:
+    native_deps = ["@io_oblivc//:runtime"]
+  else:
+    native_deps = deps
   native.cc_library(
     name = name,
     srcs = [name + "_obliv"],
     hdrs = hdrs,
-    deps = deps,
+    deps = native_deps
   )
