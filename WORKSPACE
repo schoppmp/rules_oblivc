@@ -1,1 +1,1 @@
-workspace(name = "io_rules_oblivc")
+workspace(name = "com_github_schoppmp_rules_oblivc")

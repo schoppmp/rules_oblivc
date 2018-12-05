@@ -1,4 +1,4 @@
-load("@io_rules_oblivc//oblivc:oblivc.bzl", "oblivc_library")
+load("@com_github_schoppmp_rules_oblivc//oblivc:oblivc.bzl", "oblivc_library")
 
 filegroup(
   name = "sources",
