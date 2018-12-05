@@ -69,7 +69,7 @@ cc_library(
 )
 
 genrule(
-  name = "compiled",
+  name = "_compile",
   outs = [
     "lib/cil/ccl.mli",
     "lib/cil/ccl.cmx",

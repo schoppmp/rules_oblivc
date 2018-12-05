@@ -30,18 +30,18 @@ oblivc_object = rule(
       "hdrs": attr.label_list(allow_files = True),
       "deps": attr.label_list(allow_files = True),
       "_compiler": attr.label(
-        default = "@com_github_samee_oblivc//:bin/oblivcc",
+        default = "@oblivc//:bin/oblivcc",
         allow_files = True,
         cfg = "host",
         executable = True,
       ),
       "_runfiles": attr.label(
-        default = "@com_github_samee_oblivc//:compiled",
+        default = "@oblivc//:_compile",
         allow_files = True,
         cfg = "host",
       ),
       "_oblivc_headers": attr.label(
-        default = "@com_github_samee_oblivc//:runtime_headers",
+        default = "@oblivc//:runtime_headers",
         allow_files = True,
         cfg = "host",
       ),
@@ -61,7 +61,7 @@ def oblivc_library(name, srcs = [], hdrs = [], deps = [], runtime = True):
     deps = deps
   )
   if runtime:
-    native_deps = ["@com_github_samee_oblivc//:runtime"]
+    native_deps = ["@oblivc//:runtime"]
   else:
     native_deps = deps
   native.cc_library(
