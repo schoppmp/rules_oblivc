@@ -6,6 +6,8 @@ def _oblivc_object_impl(ctx):
   args += ["-c"] + input_paths + ["-o", ctx.outputs.obj.path]
   args += ctx.fragments.cpp.copts
   args += ctx.host_fragments.cpp.copts
+  # TODO: Read flags from CC toolchain
+  args += ["-fPIC"]
   # TODO: Handle dependencies.
   ctx.actions.run(
     inputs = inputs,
@@ -53,7 +55,7 @@ oblivc_object = rule(
     host_fragments = [ "cpp" ],
   )
 
-def oblivc_library(name, srcs = [], hdrs = [], deps = [], runtime = True):
+def oblivc_library(name, srcs = [], hdrs = [], deps = [], runtime = True, **kwargs):
   oblivc_object(
     name = name + "_obliv",
     srcs = srcs,
@@ -68,5 +70,6 @@ def oblivc_library(name, srcs = [], hdrs = [], deps = [], runtime = True):
     name = name,
     srcs = [name + "_obliv"],
     hdrs = hdrs,
-    deps = native_deps
+    deps = native_deps,
+    **kwargs
   )
