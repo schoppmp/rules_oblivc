@@ -1,6 +1,9 @@
 workspace(name = "test")
 
-local_repository(name = "com_github_schoppmp_rules_oblivc", path = "..")
+local_repository(
+    name = "com_github_schoppmp_rules_oblivc",
+    path = "..",
+)
 
 load("@com_github_schoppmp_rules_oblivc//oblivc:deps.bzl", "oblivc_deps")
 
