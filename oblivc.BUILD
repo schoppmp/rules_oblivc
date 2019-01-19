@@ -459,7 +459,6 @@ genrule(
     # relative paths do not work across symlinks.
     cmd = "\n".join([
         "DIR=$$(mktemp -d $${TMPDIR-/tmp}/bazel-oblivc.XXXXXXX)",
-        "echo $${DIR}",
         "cp -Lfr $$(dirname $(rootpath configure))/* \"$${DIR}\"",
         "(cd \"$${DIR}\" && ./configure && make)",
         "echo \"$(@D)/lib\" > $(@D)/share/cil/ocamlpath",
