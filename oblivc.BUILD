@@ -52,6 +52,9 @@ oblivc_library(
     name = "runtime_obliv",
     srcs = [
         ":runtime_obliv_sources",
+        # Linking only works if this is included here. Not sure why, it should
+        # be compiled in :runtime and linked to any oblivc_library target.
+        "src/ext/oblivc/copy.c",
     ],
     hdrs = [
         ":runtime_headers",
