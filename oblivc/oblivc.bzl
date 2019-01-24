@@ -9,8 +9,11 @@ def _oblivc_objects_impl(ctx):
         ] + [depset(ctx.files._oblivc_headers)],
     )
 
+    # Include execroot
+    includes = ["-I."]
+
     # Include Obliv-C directory.
-    includes = ["-I" + ctx.files._oblivc_headers[0].dirname]
+    includes += ["-I" + ctx.files._oblivc_headers[0].dirname]
 
     # Include directories of dependencies.
     include_dirs = depset()
