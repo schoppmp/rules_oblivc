@@ -77,12 +77,14 @@ cc_library(
     ],
     data = ["src/ext/oblivc"],
     linkopts = [
-        "-lgcrypt",
         "-lpthread",
     ],
     strip_include_prefix = "src/ext/oblivc",
     visibility = ["//visibility:public"],
-    deps = ["runtime_obliv"],
+    deps = [
+        "runtime_obliv",
+        "@com_github_schoppmp_rules_oblivc//third_party/gcrypt",
+    ],
 )
 
 genrule(
