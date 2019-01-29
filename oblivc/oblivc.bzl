@@ -3,10 +3,15 @@ def _oblivc_objects_impl(ctx):
     hdrs = depset(
         direct = ctx.files.hdrs,
         transitive = [
-            dep.cc.transitive_headers
-            for dep in ctx.attr.deps
-            if hasattr(dep, "cc")
-        ] + [depset(ctx.files._oblivc_headers)],
+                         dep.cc.transitive_headers
+                         for dep in ctx.attr.deps
+                         if hasattr(dep, "cc")
+                     ] + [
+                         dep[CcInfo].compilation_context.headers
+                         for dep in ctx.attr.deps
+                         if CcInfo in dep
+                     ] +
+                     [depset(ctx.files._oblivc_headers)],
     )
 
     # Include execroot
@@ -19,8 +24,17 @@ def _oblivc_objects_impl(ctx):
     include_dirs = depset()
     for dep in ctx.attr.deps:
         if hasattr(dep, "cc"):
+            # Add directory for individual header files. This adds quite a lot
+            # of directories to the include paths, but it is currently needed to
+            # compile some Obliv-C targets such as libACK.
             for hdr in dep.cc.transitive_headers:
                 include_dirs += depset([hdr.dirname])
+
+        # New Starlark API. See https://github.com/bazelbuild/bazel/issues/7036
+        if CcInfo in dep:
+            include_dirs += dep[CcInfo].compilation_context.system_includes
+            include_dirs += dep[CcInfo].compilation_context.includes
+
     includes += ["-I" + dir for dir in include_dirs]
 
     outputs = []

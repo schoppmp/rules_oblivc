@@ -20,6 +20,14 @@ filegroup(
 )
 
 filegroup(
+    name = "all",
+    srcs = [
+        "configure",
+        ":sources",
+    ],
+)
+
+filegroup(
     name = "runtime_headers",
     srcs = glob([
         "src/ext/oblivc/*.h",
@@ -61,6 +69,9 @@ oblivc_library(
         ":runtime_obliv_headers",
     ],
     runtime = False,
+    deps = [
+        "@com_github_schoppmp_rules_oblivc//third_party/gcrypt",
+    ],
 )
 
 cc_library(
@@ -465,12 +476,15 @@ genrule(
     cmd = "\n".join([
         "DIR=$$(mktemp -d $${TMPDIR-/tmp}/bazel-oblivc.XXXXXXX)",
         "cp -Lfr $$(dirname $(rootpath configure))/* \"$${DIR}\"",
-        "(cd \"$${DIR}\" && ./configure && make)",
+        "(cd \"$${DIR}\" && ./configure && make install-local)",
         "echo \"$(@D)/lib\" > $(@D)/share/cil/ocamlpath",
         "cp -r $${DIR}/bin $(@D)",
         "cp -r $${DIR}/lib $(@D) || true",
         "rm -rf \"$${DIR}\"",
     ]),
     local = 1,
+    tools = [
+        "@com_github_schoppmp_rules_oblivc//third_party/gcrypt",
+    ],
     visibility = ["//visibility:public"],
 )
