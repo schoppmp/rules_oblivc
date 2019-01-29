@@ -483,8 +483,5 @@ genrule(
         "rm -rf \"$${DIR}\"",
     ]),
     local = 1,
-    tools = [
-        "@com_github_schoppmp_rules_oblivc//third_party/gcrypt",
-    ],
     visibility = ["//visibility:public"],
 )

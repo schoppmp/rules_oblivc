@@ -33,7 +33,6 @@ def _oblivc_objects_impl(ctx):
         # New Starlark API. See https://github.com/bazelbuild/bazel/issues/7036
         if CcInfo in dep:
             include_dirs += dep[CcInfo].compilation_context.system_includes
-            include_dirs += dep[CcInfo].compilation_context.includes
 
     includes += ["-I" + dir for dir in include_dirs]
 
