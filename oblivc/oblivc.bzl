@@ -39,7 +39,7 @@ def _oblivc_objects_impl(ctx):
     outputs = []
 
     for src in srcs:
-        output_file = ctx.actions.declare_file(src.basename + ".o")
+        output_file = ctx.actions.declare_file(src.path + ".o")
 
         # We have to include the Obliv-C runtime headers here.
         args = ["-c", src.path, "-o", output_file.path]
