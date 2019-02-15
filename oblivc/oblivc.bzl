@@ -1,3 +1,10 @@
+load(
+    "@rules_foreign_cc//tools/build_defs:cc_toolchain_util.bzl",
+    "get_env_vars",
+    "get_flags_info",
+    "get_tools_info",
+)
+
 def _oblivc_objects_impl(ctx):
     srcs = depset(ctx.files.srcs)
     hdrs = depset(
@@ -48,11 +55,19 @@ def _oblivc_objects_impl(ctx):
         args += ctx.host_fragments.cpp.copts
         args += ctx.attr.copts
 
-        # TODO: Read flags from CC toolchain
-        args += ["-fPIC"]
+        # Add C compiler flags from CC toolchain info.
+        args += get_flags_info(ctx).cc
+
+        # Obliv-C produces lots of unused variables, communicating them to the
+        # user doesn't help much.
+        args += ["-Wno-unused-variable"]
 
         # Workaround for https://github.com/samee/obliv-c/issues/48
         args += ["-D_Float128=double"]
+
+        # Set environment from toolchain, including CC compiler
+        env = get_env_vars(ctx)
+        env["CC"] = get_tools_info(ctx).cc
 
         ctx.actions.run(
             inputs = depset(transitive = [depset([src]), hdrs]),
@@ -63,9 +78,7 @@ def _oblivc_objects_impl(ctx):
             ),
             executable = ctx.executable._compiler,
             use_default_shell_env = True,
-            # execution_requirements = {
-            #     "local": "1",
-            # },
+            env = env,
             tools = ctx.files._compiler_lib,
         )
         outputs += [output_file]
@@ -94,6 +107,10 @@ oblivc_objects = rule(
             default = "@oblivc//:runtime_headers",
             allow_files = True,
             cfg = "host",
+        ),
+        # We need to declare this attribute to access cc_toolchain.
+        "_cc_toolchain": attr.label(
+            default = Label("@bazel_tools//tools/cpp:current_cc_toolchain"),
         ),
     },
     fragments = ["cpp"],
