@@ -15,16 +15,19 @@ filegroup(
 )
 """
 
+def clean_dep(dep):
+    return str(Label(dep))
+
 def oblivc_deps():
     rules_foreign_cc_dependencies()
 
     if "oblivc" not in native.existing_rules():
         http_archive(
             name = "oblivc",
-            url = "https://github.com/schoppmp/obliv-c/archive/b55a96e5aebb557e07668e30a79d6818b1663f5c.zip",
-            sha256 = "b58a3022a5f62b88add1ce35d54781bcc557474c814ea13d1297b45554e2a4e9",
-            strip_prefix = "obliv-c-b55a96e5aebb557e07668e30a79d6818b1663f5c",
-            build_file = "@com_github_schoppmp_rules_oblivc//:oblivc.BUILD",
+            url = "https://github.com/schoppmp/obliv-c/archive/6f08d7860536f49ec102397383c0d77cebd34c7b.zip",
+            sha256 = "8f7dca92f749cf099d6f04213615dc6af47f3c2b93536d1c704c4947bd0bcab4",
+            strip_prefix = "obliv-c-6f08d7860536f49ec102397383c0d77cebd34c7b",
+            build_file = clean_dep("//:oblivc.BUILD"),
         )
 
     if "org_gnupg_gcrypt" not in native.existing_rules():
