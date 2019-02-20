@@ -17,6 +17,7 @@ filegroup(
             "lib/perl5/.gdbinit",
         ],
     ),
+    visibility = ["//visibility:public"],
 )
 
 filegroup(
@@ -83,6 +84,7 @@ cc_library(
         ":runtime_headers",
     ],
     copts = [
+        "-Wno-unused-but-set-variable",
         "-Wno-unused-variable",
         "-I$(rootpath src/ext/oblivc)",
     ],
