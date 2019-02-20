@@ -58,6 +58,10 @@ def _oblivc_objects_impl(ctx):
         # Add C compiler flags from CC toolchain info.
         args += get_flags_info(ctx).cc
 
+        # Needed for shared library support. Not sure why this doesn't get
+        # included in the flags above.
+        args += ["-fPIC"]
+
         # Obliv-C produces lots of unused variables, communicating them to the
         # user doesn't help much.
         args += ["-Wno-unused-variable"]
