@@ -69,6 +69,9 @@ oblivc_library(
         ":runtime_headers",
         ":runtime_obliv_headers",
     ],
+    copts = [
+        "-Wno-unused-but-set-variable",
+    ],
     runtime = False,
     deps = [
         "@com_github_schoppmp_rules_oblivc//third_party/gcrypt",

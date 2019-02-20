@@ -42,36 +42,35 @@ def _oblivc_objects_impl(ctx):
             include_dirs += dep[CcInfo].compilation_context.system_includes
 
     includes += ["-I" + dir for dir in include_dirs]
+    flags = includes
 
+    # Get C compiler flags from CC toolchain info and copts.
+    flags += get_flags_info(ctx).cc
+    flags += ctx.fragments.cpp.copts
+    flags += ctx.host_fragments.cpp.copts
+    flags += ctx.attr.copts
+
+    # Needed for shared library support. Not sure why this doesn't get
+    # included in toolchain_flags.
+    flags += ["-fPIC"]
+
+    # Obliv-C produces lots of unused variables, communicating them to the
+    # user doesn't help much.
+    flags += ["-Wno-unused-variable"]
+
+    # Workaround for https://github.com/samee/obliv-c/issues/48
+    flags += ["-D_Float128=double"]
+
+    # Set environment from toolchain, including C compiler
+    env = get_env_vars(ctx)
+    env["CC"] = get_tools_info(ctx).cc
+
+    # We compile each file separately and return the outputs as a depset.
     outputs = []
-
     for src in srcs:
         output_file = ctx.actions.declare_file(src.path + ".o")
 
-        # We have to include the Obliv-C runtime headers here.
-        args = ["-c", src.path, "-o", output_file.path]
-        args += includes
-        args += ctx.fragments.cpp.copts
-        args += ctx.host_fragments.cpp.copts
-        args += ctx.attr.copts
-
-        # Add C compiler flags from CC toolchain info.
-        args += get_flags_info(ctx).cc
-
-        # Needed for shared library support. Not sure why this doesn't get
-        # included in the flags above.
-        args += ["-fPIC"]
-
-        # Obliv-C produces lots of unused variables, communicating them to the
-        # user doesn't help much.
-        args += ["-Wno-unused-variable"]
-
-        # Workaround for https://github.com/samee/obliv-c/issues/48
-        args += ["-D_Float128=double"]
-
-        # Set environment from toolchain, including CC compiler
-        env = get_env_vars(ctx)
-        env["CC"] = get_tools_info(ctx).cc
+        args = flags + ["-c", src.path, "-o", output_file.path]
 
         ctx.actions.run(
             inputs = depset(transitive = [depset([src]), hdrs]),
