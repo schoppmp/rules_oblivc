@@ -35,13 +35,14 @@ def _oblivc_objects_impl(ctx):
             # of directories to the include paths, but it is currently needed to
             # compile some Obliv-C targets such as libACK.
             for hdr in dep.cc.transitive_headers:
-                include_dirs += depset([hdr.dirname])
+                include_dirs = depset([hdr.dirname], transitive = [include_dirs])
 
         # New Starlark API. See https://github.com/bazelbuild/bazel/issues/7036
         if CcInfo in dep:
-            include_dirs += dep[CcInfo].compilation_context.system_includes
+            for hdr in dep[CcInfo].compilation_context.headers.to_list():
+                include_dirs = depset([hdr.dirname], transitive = [include_dirs])
 
-    includes += ["-I" + dir for dir in include_dirs]
+    includes += ["-I" + dir for dir in include_dirs.to_list()]
     flags = includes
 
     # Get C compiler flags from CC toolchain info and copts.
@@ -67,7 +68,7 @@ def _oblivc_objects_impl(ctx):
 
     # We compile each file separately and return the outputs as a depset.
     outputs = []
-    for src in srcs:
+    for src in srcs.to_list():
         output_file = ctx.actions.declare_file(src.path + ".o")
 
         args = flags + ["-c", src.path, "-o", output_file.path]
@@ -145,5 +146,6 @@ def oblivc_library(
         hdrs = hdrs,
         deps = deps_with_runtime,
         copts = copts,
+        linkstatic = 1,
         **kwargs
     )
