@@ -6,6 +6,7 @@ load(
     "@rules_foreign_cc//:workspace_definitions.bzl",
     "rules_foreign_cc_dependencies",
 )
+load("//third_party:repo.bzl", "third_party_http_archive")
 
 all_content = """
 filegroup(
@@ -33,17 +34,21 @@ def oblivc_deps():
     if "org_gnupg_gcrypt" not in native.existing_rules():
         http_archive(
             name = "org_gnupg_gcrypt",
-            url = "https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.8.4.tar.bz2",
-            strip_prefix = "libgcrypt-1.8.4",
-            sha256 = "f638143a0672628fde0cad745e9b14deb85dffb175709cacc1f4fe24b93f2227",
+            url = "https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.8.5.tar.bz2",
+            strip_prefix = "libgcrypt-1.8.5",
+            sha256 = "3b4a2a94cb637eff5bdebbcaf46f4d95c4f25206f459809339cdada0eb577ac3",
             build_file_content = all_content,
         )
 
     if "org_gnupg_gpg_error" not in native.existing_rules():
-        http_archive(
+        third_party_http_archive(
             name = "org_gnupg_gpg_error",
-            url = "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.34.tar.bz2",
-            strip_prefix = "libgpg-error-1.34",
-            sha256 = "0680799dee71b86b2f435efb825391eb040ce2704b057f6bd3dcc47fbc398c81",
+            url = "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.bz2",
+            sha256 = "babd98437208c163175c29453f8681094bcaf92968a15cafb1a276076b33c97c",
+            strip_prefix = "libgpg-error-1.36",
             build_file_content = all_content,
+            patch_file = clean_dep("//third_party/gpg_error:gawk5.diff"),
+            link_files = {
+                clean_dep("//third_party/gpg_error:configure"): "configure2",
+            },
         )
