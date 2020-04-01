@@ -39,6 +39,8 @@ def _oblivc_objects_impl(ctx):
 
         # New Starlark API. See https://github.com/bazelbuild/bazel/issues/7036
         if CcInfo in dep:
+            include_dirs = depset(dep[CcInfo].compilation_context.system_includes.to_list(), transitive = [include_dirs])
+            include_dirs = depset(dep[CcInfo].compilation_context.includes.to_list(), transitive = [include_dirs])
             for hdr in dep[CcInfo].compilation_context.headers.to_list():
                 include_dirs = depset([hdr.dirname], transitive = [include_dirs])
 
