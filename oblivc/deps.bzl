@@ -43,12 +43,8 @@ def oblivc_deps():
     if "org_gnupg_gpg_error" not in native.existing_rules():
         third_party_http_archive(
             name = "org_gnupg_gpg_error",
-            url = "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.36.tar.bz2",
-            sha256 = "babd98437208c163175c29453f8681094bcaf92968a15cafb1a276076b33c97c",
-            strip_prefix = "libgpg-error-1.36",
+            url = "https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.37.tar.bz2",
+            sha256 = "b32d6ff72a73cf79797f7f2d039e95e9c6f92f0c1450215410840ab62aea9763",
+            strip_prefix = "libgpg-error-1.37",
             build_file_content = all_content,
-            patch_file = clean_dep("//third_party/gpg_error:gawk5.diff"),
-            link_files = {
-                clean_dep("//third_party/gpg_error:configure"): "configure2",
-            },
         )

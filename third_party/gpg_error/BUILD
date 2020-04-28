@@ -4,7 +4,6 @@ licenses(["restricted"])
 
 configure_make(
     name = "gpg_error",
-    configure_command = "configure2",
     configure_options = [
         "--enable-static=yes",
     ],
