@@ -1,4 +1,4 @@
-load("@rules_foreign_cc//tools/build_defs:configure.bzl", "configure_make")
+load("@rules_foreign_cc//foreign_cc:configure.bzl", "configure_make")
 
 licenses(["restricted"])
 
@@ -8,6 +8,6 @@ configure_make(
         "--enable-static=yes",
     ],
     lib_source = "@org_gnupg_gpg_error//:all",
-    static_libraries = ["libgpg-error.a"],
+    out_static_libs = ["libgpg-error.a"],
     visibility = ["//visibility:public"],
 )

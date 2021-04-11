@@ -1,5 +1,5 @@
 load(
-    "@rules_foreign_cc//tools/build_defs:cc_toolchain_util.bzl",
+    "@rules_foreign_cc//foreign_cc/private:cc_toolchain_util.bzl",
     "get_env_vars",
     "get_flags_info",
     "get_tools_info",
